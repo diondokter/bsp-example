@@ -9,8 +9,6 @@ embassy-stm32 = { git = "https://github.com/embassy-rs/embassy.git", rev = "78ca
 embassy-sync = { git = "https://github.com/embassy-rs/embassy.git", rev = "78ca904", features = ["defmt"] }
 embassy-executor = { git = "https://github.com/embassy-rs/embassy.git", rev = "78ca904", features = ["arch-cortex-m", "executor-thread", "defmt", "integrated-timers"] }
 embassy-time = { git = "https://github.com/embassy-rs/embassy.git", rev = "78ca904", features = ["defmt", "defmt-timestamp-uptime", "tick-hz-32_768"] }
-embedded-io-async = { version = "0.6.1", features = ["defmt-03"] }
-embedded-io = { version = "0.6.0", features = ["defmt-03"] }
 
 defmt = "0.3"
 defmt-rtt = "0.4"

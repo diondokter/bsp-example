@@ -34,10 +34,7 @@ fn main() -> ! {
 
     let mut buf = [0u8; 1];
     loop {
-        if let Err(e) = usart.blocking_read(&mut buf) {
-            defmt::error!("Uart read error: {}", e);
-            continue;
-        }
+        unwrap!(usart.blocking_read(&mut buf));
         unwrap!(usart.blocking_write(&buf));
     }
 }
