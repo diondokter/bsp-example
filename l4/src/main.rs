@@ -2,8 +2,17 @@
 #![no_main]
 
 use defmt::*;
-use embassy_stm32::{usart::Uart, Config};
+use embassy_stm32::{
+    bind_interrupts, peripherals,
+    usart::{self, BufferedUart},
+    Config,
+};
+use embedded_io::{Write, Read};
 use {defmt_rtt as _, panic_probe as _};
+
+bind_interrupts!(struct Irqs {
+    USART2 => usart::BufferedInterruptHandler<peripherals::USART2>;
+});
 
 #[cortex_m_rt::entry]
 fn main() -> ! {
@@ -27,14 +36,24 @@ fn main() -> ! {
     let p = embassy_stm32::init(config);
 
     let config = embassy_stm32::usart::Config::default();
-    let mut usart = unwrap!(Uart::new_blocking(p.USART2, p.PA3, p.PA2, config));
+    let mut tx_buffer = [0; 128];
+    let mut rx_buffer = [0; 128];
+    let mut usart = unwrap!(BufferedUart::new(
+        p.USART2,
+        Irqs,
+        p.PA3,
+        p.PA2,
+        &mut tx_buffer,
+        &mut rx_buffer,
+        config
+    ));
 
-    unwrap!(usart.blocking_write(b"Hello Embassy World!\r\n"));
+    unwrap!(usart.write_all(b"Hello Embassy World!\r\n"));
     info!("wrote Hello, starting echo");
 
     let mut buf = [0u8; 1];
     loop {
-        unwrap!(usart.blocking_read(&mut buf));
-        unwrap!(usart.blocking_write(&buf));
+        unwrap!(usart.read_exact(&mut buf));
+        unwrap!(usart.write_all(&buf));
     }
 }

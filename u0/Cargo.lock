@@ -741,7 +741,17 @@ dependencies = [
  "embassy-stm32",
  "embassy-sync",
  "embassy-time",
+ "embedded-io",
  "panic-probe",
+ "uart-echo",
+]
+
+[[package]]
+name = "uart-echo"
+version = "0.1.0"
+dependencies = [
+ "defmt",
+ "embedded-io",
 ]
 
 [[package]]
